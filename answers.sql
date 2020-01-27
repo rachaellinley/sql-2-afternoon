@@ -130,3 +130,77 @@ WHERE type = 'silver';
 DELETE 
 FROM practice_delete 
 WHERE value = 150;
+-------------------------------------
+-- * users need a name and an email.
+-- * products need a name and a price
+-- * orders need a ref to product.
+-- * All 3 need primary keys.
+
+--* Create 3 tables following the criteria in the summary.
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE products (
+  product_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL, 
+  price INT NOT NULL
+);
+
+CREATE TABLE orders(
+  order_id SERIAL PRIMARY KEY,
+  product_id INT,
+  FOREIGN KEY (product_id)
+  REFERENCES products(product_id)
+);
+
+-- * Add some data to fill up each table.
+--   * At least 3 users, 3 products, 3 orders.
+  INSERT INTO users (name, email)
+  VALUES 
+  ('Rachael', 'rachael@rachael.com'),
+  ('Beth', 'beth@beth.com'),
+  ('Anthony', 'anthony@anthony.com')
+
+
+INSERT INTO products (name, price)
+VALUES 
+('product 1', 12),
+('product 2', 15),
+('product 3', 19)
+
+  INSERT INTO orders (product_id)
+  VALUES (1),(2), (3)
+
+--   * Get all products for the first order.
+SELECT * FROM orders
+INNER JOIN orders
+ON products.product_id = orders.product_id
+WHERE orders.order_id = 1;
+
+--   * Get all orders.
+SELECT * FROM orders;
+
+--   * Get the total cost of an order ( sum the price of all products on an order ).
+SELECT 
+SUM orders.order_id
+FROM products
+INNER JOIN orders on products.product_id = orders.product_id
+WHERE order_id = 1
+
+-- * Add a foreign key reference from orders to users.
+ALTER TABLE users
+ADD COLUMN order_id INTEGER
+REFERENCES orders(orders_id);
+
+-- * Update the orders table to link a user to each order.
+ALTER TABLE orders
+ADD COLUMN user_id
+REFERENCES user_id(users)
+
+--   * Get all orders for a user.
+SELECT * from 
+orders
+WHERE  user_id=1
